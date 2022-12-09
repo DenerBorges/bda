@@ -22,11 +22,26 @@ function getOrderByChild(order,db,callback){
 }
 
 function getFilterByChild(filter,value, db,callback){
+<<<<<<< HEAD
     //implement aqui
 }
 
 function getMostExpensive(db,setValue,list){
     // implement aqui
+=======
+    const refDB = ref(db, "produtos/");
+    const consulta = query(refDB, orderByChild(filter), startAt(value));
+    onChildAdded(consulta, callback);
+}
+
+function getMostExpensive(db,setValue,list){
+    const refDB = ref(db, "produtos/");
+    const consulta = query(refDB, orderByChild("preco"));
+    onChildAdded(consulta, (dados) => {
+        list.unshift(dados.val());
+    });
+    setValue([...list]);
+>>>>>>> 8736d5ec63b932be719258deed947427a2c8df55
     /**
      *     Nesta função é necessário implementar o callback,
      * pois será necessário ordenar os resultados no cliente
@@ -44,11 +59,24 @@ function getMostExpensive(db,setValue,list){
 }
 
 function getMostCheap(db,callback){
+<<<<<<< HEAD
     //implemente aqui
 }
 
 function getPriceRange(value, db,callback){
     //implemente aqui
+=======
+    const refDB = ref(db, "produtos/");
+    const consulta = query(refDB, orderByChild("preco"));
+    onChildAdded(consulta, callback);
+}
+
+function getPriceRange(value, db,callback){
+    const refDB = ref(db, "produtos/");
+    const consulta = query(refDB,orderByChild("preco"), startAfter(0), endAt(Number(value))
+    );
+    onChildAdded(consulta, callback);
+>>>>>>> 8736d5ec63b932be719258deed947427a2c8df55
 }
 
 export {getOrderByChild, getFilterByChild, getMostExpensive, getMostCheap, getPriceRange}
