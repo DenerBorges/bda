@@ -111,8 +111,62 @@ try {
     //     }).toArray()
 
     // 4)
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({ 
+    //         $and:[
+    //             {qtd_estoque:{$gte:100}},
+    //             {qtd_estoque:{$lte:500}}
+    //         ]
+    //     },{
+    //         sort:{qtd_estoque:-1},
+    //         projection:{ _id: 0, descricao: 0, importado: 0,}
+    //     }).toArray()
 
-    //const resultados = await client.db('loja').collection('produtos').find().toArray();
+    // 5)
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({ 
+    //         importado: true
+    //     },{
+    //         sort:{preco:1},
+    //         projection:{ _id: 0, descricao: 0,}
+    //     }).toArray()
+
+    // 6)
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({ 
+    //         importado: false,
+    //         preco: {$lt: 10000}
+    //     },{
+    //         sort:{preco:1},
+    //         projection:{ _id: 0, descricao: 0,}
+    //     }).toArray()
+
+    // 7)
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({
+    //         preco:{$in: [2599.9, 3500, 4500, 18500, 20500]}
+    //     },{
+    //         projection:{ _id: 0, descricao: 0, importado: 0,}
+    //     }).toArray()
+
+    // 8)
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({
+    //         qtd_estoque:{$ne:150}
+    //     },{
+    //         projection:{ _id: 0, descricao: 0, importado: 0,}
+    //     }).toArray()
+
+    // Tarefa 4
+    // const resultados = await client.db('loja').collection('produtos')
+    //     .find({
+    //         desconto:{$exists:true}
+    //     },{
+    //         sort:{desconto:1},
+    //         projection:{ _id: 0, descricao: 0, importado: 0,}
+    //     }).toArray()
+
+    // const resultados = await client.db('loja').collection('produtos').find().toArray();
     console.table(resultados)
 } catch (error) {
     console.log(error);
