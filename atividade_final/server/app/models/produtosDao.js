@@ -17,8 +17,8 @@ const getAllProdutos = async (orderBy = 'id_prod', reverse = false) => {
         console.log('getAllProdutos')
         let resultados = []
 
-        await collection.find({},{
-            sort:{id_prod:reverse}
+        resultados = await collection.find({}, {
+            sort:{[orderBy] : reverse ? 1 : -1}
         }).toArray();
 
         return resultados;
@@ -39,7 +39,7 @@ const getProdutoById = async (id_prod) => {
     try {
         let produto = {}
 
-        await collection.find({
+        produto = await collection.find({
             id_prod:id_prod
         }).toArray();
 
