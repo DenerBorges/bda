@@ -40,7 +40,7 @@ const getProdutoById = async (id_prod) => {
         let produto = {}
 
         produto = await collection.find({
-            id_prod:id_prod
+            id_prod:{$eq:Number(id_prod)}
         }).toArray();
 
         return produto;
@@ -63,7 +63,7 @@ const getProdutoById = async (id_prod) => {
 const insertProduto = async (produto) => {
     try {
         console.log(produto)
-        //implementar aqui
+        await collection.insertOne(produto);
 
         return true
     } catch (error) {
@@ -84,11 +84,14 @@ const insertProduto = async (produto) => {
  */
 const updateProduto = async (new_produto) => {
     try {
-
-        await collection.updateOne(
-            {id_prod},
+        console.log(new_produto);
+        
+        await collection.find({
+            // id_prod:{$eq:Number(new_produto)}
+        })
+        .updateOne(
             {$set:new_produto}
-        );
+        ).toArray();
 
         let updated
         if (updated) return true
@@ -159,8 +162,6 @@ const getFilteredProdutos = async (field = 'nome', term = '') => {
             $text: {
                 $search: term
             }
-        },{
-            projection:{ _id: 0}
         }).toArray()
 
         return resultados;
@@ -182,7 +183,14 @@ const getProdutosPriceRange = async (min = 0, max = 0, sort = 1) => {
     try {
         let resultados = []
 
-        //implementar aqui
+        resultados = await collection.find({
+            $and:[
+                {preco:{$gte:min}},
+                {preco:{$lte:max}}
+            ]
+        }, {
+            sort:{preco:sort}
+        }).toArray();
 
         return resultados;
     } catch (error) {
