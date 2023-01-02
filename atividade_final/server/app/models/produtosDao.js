@@ -28,6 +28,34 @@ const getAllProdutos = async (orderBy = 'id_prod', reverse = false) => {
     }
 }
 
+/** Filtra Produtos por termo de busca para o campo nome ou descricao 
+ * Rotas da API:
+ * GET /produtos?field=${campo}&search=${termo}
+ * campo => nome || descricao
+ * 
+ * @param {*} field campo de busca (nome ou descricao)
+ * @param {*} term termo de busca (palavra a ser encontrada)
+ * @returns Array de objetos Produto
+ */
+ const getFilteredProdutos = async (field = 'nome', term = '') => {
+    try {
+        let resultados = []
+        console.log({ field, term })
+        await changeIndexes(field) //troca de indices
+
+        resultados = await collection.find({ 
+            $text: {
+                $search: term
+            }
+        }).toArray()
+
+        return resultados;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+
 /**
  * Busca produto definido por id_prod igual ao campo id_prod
  * Rotas da API:
@@ -84,16 +112,15 @@ const insertProduto = async (produto) => {
  */
 const updateProduto = async (new_produto) => {
     try {
-        console.log(new_produto);
+        console.log({new_produto});
         
-        await collection.find({
-            // id_prod:{$eq:Number(new_produto)}
-        })
-        .updateOne(
+        let filter = {id_prod:new_produto.id_prod};
+        
+        let updated = await collection.updateOne(
+            filter,
             {$set:new_produto}
-        ).toArray();
+        );
 
-        let updated
         if (updated) return true
         else throw new Error('DAO: Erro ao atualizar produto!')
     } catch (error) {
@@ -114,7 +141,7 @@ const updateProduto = async (new_produto) => {
 const deleteProduto = async (id_prod) => {
     try {
 
-        await collection.deleteOne(id_prod);
+        let deleted = await collection.deleteOne({id_prod});
 
         return deleted //boolean
     } catch (error) {
@@ -134,42 +161,19 @@ const deleteProduto = async (id_prod) => {
 const deleteManyProdutos = async (ids) => {
     try {
 
-        await collection.deleteMany(ids);
+        let filter = {id_prod:{$in:ids}};
 
-        return deltedAll //boolean
+        let deltedAll = await collection.deleteMany(filter);
+
+        console.log(deltedAll);
+
+        return deltedAll.deletedCount > 0 //boolean
     } catch (error) {
         console.log(error)
         return false;
     }
 }
 
-/** Filtra Produtos por termo de busca para o campo nome ou descricao 
- * Rotas da API:
- * GET /produtos?field=${campo}&search=${termo}
- * campo => nome || descricao
- * 
- * @param {*} field campo de busca (nome ou descricao)
- * @param {*} term termo de busca (palavra a ser encontrada)
- * @returns Array de objetos Produto
- */
-const getFilteredProdutos = async (field = 'nome', term = '') => {
-    try {
-        let resultados = []
-        console.log({ field, term })
-        await changeIndexes(field) //troca de indices
-
-        await collection.find({ 
-            $text: {
-                $search: term
-            }
-        }).toArray()
-
-        return resultados;
-    } catch (error) {
-        console.log(error)
-        return false;
-    }
-}
 /**
  * Rota da API:
  * GET /produtos/filter_price/?greater=${min}&less=${max}
